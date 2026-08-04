@@ -1,12 +1,17 @@
 import 'package:ecommerce/firebase_options.dart';
 import 'package:ecommerce/provider/providers.dart';
+import 'package:ecommerce/screens/admin_new_product.dart';
+import 'package:ecommerce/screens/admin_screen.dart';
 import 'package:ecommerce/screens/empty_shell_screen.dart';
 import 'package:ecommerce/screens/home_page_tab.dart';
 import 'package:ecommerce/screens/login_screen.dart';
 import 'package:ecommerce/screens/onboarding_screen.dart';
+import 'package:ecommerce/screens/settings_page_tab.dart';
+import 'package:ecommerce/screens/shop_page_tab.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:ecommerce/screens/verify_email_screen.dart';
+import 'package:ecommerce/screens/wishlist_page_tab.dart';
 import 'package:ecommerce/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +49,16 @@ final _router = GoRouter(
       name: 'verify-email',
       builder: (context, state) => const VerifyEmailScreen(),
     ),
+    GoRoute(
+      path: '/admin-screen',
+      name: 'admin-screen',
+      builder: (context, state) => const AdminScreen(),
+    ),
+    GoRoute(
+      path: '/admin-new-product',
+      name: 'admin-new-product',
+      builder: (context, state) => const AdminNewProduct(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return EmptyShellScreen(navigationShell: navigationShell);
@@ -66,7 +81,49 @@ final _router = GoRouter(
             ),
           ],
         ),
-        
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/shop',
+              name: 'shop',
+              builder: (context, state) {
+                return Consumer(
+                  builder: (context, ref, child) {
+                    final keyVersion = ref.watch(shopTabKeyProvider);
+
+                    return ShopPage(key: ValueKey('shop_$keyVersion'));
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/wishlist',
+              name: 'wishlist',
+              builder: (context, state) {
+                return Consumer(
+                  builder: (context, ref, child) {
+                    final keyVersion = ref.watch(wishlistTabKeyProvider);
+
+                    return WishlistPage(key: ValueKey('wishlist_$keyVersion'));
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/settings',
+              name: 'settings',
+              builder: (context, state) => const SettingsPage(),
+            ),
+          ],
+        ),
       ],
     ),
   ],
@@ -74,10 +131,8 @@ final _router = GoRouter(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const ProviderScope(child: MainApp()));
 }
 

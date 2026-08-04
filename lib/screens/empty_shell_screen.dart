@@ -28,27 +28,27 @@ class EmptyShellScreen extends ConsumerWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: onTap,
-        selectedIndex: navigationShell.currentIndex,
-        destinations: [
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home_outlined),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTap,
+        currentIndex: navigationShell.currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.home_outlined),
             icon: Icon(Icons.home_outlined),
             label: 'Home',
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.shopping_cart_outlined),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.shopping_cart_outlined),
             icon: Icon(Icons.shopping_cart_outlined),
             label: 'Shop',
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.favorite_outline),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.favorite_outline),
             icon: Icon(Icons.favorite_outline),
             label: 'Wishlist',
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.settings_outlined),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.settings_outlined),
             icon: Icon(Icons.settings_outlined),
             label: 'Settings',
           ),

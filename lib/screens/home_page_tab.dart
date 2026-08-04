@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search),
                       hintText: 'Search keywords...',
+                      hintStyle: TextStyle(color: color.secondary),
                     ),
                   ),
                 ),

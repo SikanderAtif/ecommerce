@@ -22,9 +22,16 @@ abstract class AppTheme {
       colorScheme: _schemeLight,
       scaffoldBackgroundColor: _schemeLight.surface,
       textTheme: TextTheme(
-        displayMedium: TextStyle(color: _schemeLight.primary, fontWeight: FontWeight.bold),
-        headlineMedium: TextStyle(color: _schemeLight.primary, fontWeight: FontWeight.bold),
-        bodyMedium: TextStyle(color: _schemeLight.secondary)
+        displayMedium: TextStyle(
+          color: _schemeLight.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        headlineMedium: TextStyle(
+          color: _schemeLight.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: TextStyle(color: _schemeLight.primary),
+        bodyMedium: TextStyle(color: _schemeLight.secondary),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: _schemeLight.surface,
@@ -63,8 +70,14 @@ abstract class AppTheme {
         suffixIconColor: _schemeLight.secondary,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: _schemeLight.surface,
         selectedItemColor: _schemeLight.onSurface,
         unselectedItemColor: _schemeLight.primary,
+        selectedIconTheme: IconThemeData(color: _schemeLight.onSurface),
+        unselectedIconTheme: IconThemeData(color: _schemeLight.primary),
+        selectedLabelStyle: TextStyle(color: _schemeLight.onSurface),
+        unselectedLabelStyle: TextStyle(color: _schemeLight.primary),
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
