@@ -1,6 +1,9 @@
 import 'package:ecommerce/firebase_options.dart';
+import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/provider/providers.dart';
+import 'package:ecommerce/screens/admin_all_products.dart';
 import 'package:ecommerce/screens/admin_new_product.dart';
+import 'package:ecommerce/screens/admin_product_details.dart';
 import 'package:ecommerce/screens/admin_screen.dart';
 import 'package:ecommerce/screens/empty_shell_screen.dart';
 import 'package:ecommerce/screens/home_page_tab.dart';
@@ -58,6 +61,22 @@ final _router = GoRouter(
       path: '/admin-new-product',
       name: 'admin-new-product',
       builder: (context, state) => const AdminNewProduct(),
+    ),
+    GoRoute(
+      path: '/admin-all-products',
+      name: 'admin-all-products',
+      builder: (context, state) => const AdminAllProducts(),
+    ),
+    GoRoute(
+      path: '/admin-product-details',
+      name: 'admin-product-details',
+      builder: (context, state) {
+        final payload = state.extra as Product;
+
+        return AdminProductDetails(
+          item: payload,
+        );
+      }
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

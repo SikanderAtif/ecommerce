@@ -80,7 +80,15 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       body: Center(
         child: Expanded(
-          child: ElevatedButton(onPressed: _signout, child: Text('Sign Out')),
+          child: ElevatedButton(
+            onPressed: _signout,
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith((_) {
+                return Colors.red;
+              }),
+            ),
+            child: Text('Sign Out'),
+          ),
         ),
       ),
     );
