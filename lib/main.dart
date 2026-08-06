@@ -13,6 +13,7 @@ import 'package:ecommerce/screens/settings_page_tab.dart';
 import 'package:ecommerce/screens/shop_page_tab.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
+import 'package:ecommerce/screens/user_product_details.dart';
 import 'package:ecommerce/screens/verify_email_screen.dart';
 import 'package:ecommerce/screens/wishlist_page_tab.dart';
 import 'package:ecommerce/theme/theme.dart';
@@ -73,10 +74,8 @@ final _router = GoRouter(
       builder: (context, state) {
         final payload = state.extra as Product;
 
-        return AdminProductDetails(
-          item: payload,
-        );
-      }
+        return AdminProductDetails(item: payload);
+      },
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -96,6 +95,15 @@ final _router = GoRouter(
                     return HomePage(key: ValueKey('home_$keyVersion'));
                   },
                 );
+              },
+            ),
+            GoRoute(
+              path: '/home/user-product-details',
+              name: 'user-product-details',
+              builder: (context, state) {
+                final payload = state.extra as Product;
+
+                return UserProductDetails(item: payload);
               },
             ),
           ],

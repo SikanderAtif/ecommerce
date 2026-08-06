@@ -76,6 +76,7 @@ abstract class APIService {
     required String name,
     required String desc,
     required String price,
+    required String category,
     XFile? newImage,
   }) async {
     String? api = await url;
@@ -91,6 +92,7 @@ abstract class APIService {
       request.fields['name'] = name;
       request.fields['desc'] = desc;
       request.fields['price'] = price;
+      request.fields['category'] = category;
 
       if (newImage != null) {
         request.files.add(

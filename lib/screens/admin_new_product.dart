@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ecommerce/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -15,10 +16,11 @@ class _AdminNewProductState extends State<AdminNewProduct> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
+  Category? _selectedCategory;
   File? _selectedImage;
   bool _isUploading = false;
   final ImagePicker _picker = ImagePicker();
-  final String _baseURL = "https://a8bc-110-93-232-234.ngrok-free.app";
+  final String _baseURL = "https://1b7c-110-93-232-234.ngrok-free.app";
 
   @override
   void dispose() {
@@ -88,7 +90,13 @@ class _AdminNewProductState extends State<AdminNewProduct> {
     final String desc = _descController.text.trim();
     final String price = _priceController.text.trim();
 
-    if (name.isEmpty || desc.isEmpty || price.isEmpty || _selectedImage == null) return;
+    if (name.isEmpty ||
+        desc.isEmpty ||
+        price.isEmpty ||
+        _selectedCategory == null ||
+        _selectedImage == null) {
+      return;
+    }
 
     setState(() {
       _isUploading = true;
@@ -98,9 +106,7 @@ class _AdminNewProductState extends State<AdminNewProduct> {
     try {
       final String apiURL = "$_baseURL/api/upload";
 
-      debugPrint(
-        "Sending request to target: $apiURL",
-      );
+      debugPrint("Sending request to target: $apiURL");
 
       var request = http.MultipartRequest('POST', Uri.parse(apiURL));
 
@@ -111,6 +117,7 @@ class _AdminNewProductState extends State<AdminNewProduct> {
       request.fields['name'] = name;
       request.fields['desc'] = desc;
       request.fields['price'] = price;
+      request.fields['category'] = _selectedCategory!.label;
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
@@ -150,7 +157,7 @@ class _AdminNewProductState extends State<AdminNewProduct> {
     final ColorScheme color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text('New Product')),
+      appBar: AppBar(title: Text('New Product'), scrolledUnderElevation: 0),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(12),
@@ -261,6 +268,53 @@ class _AdminNewProductState extends State<AdminNewProduct> {
                 ),
               ),
               SizedBox(height: 24),
+
+              Text(
+                'Product Category',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+
+              SizedBox(
+                height: 90,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: Category.values.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final category = Category.values[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedCategory = category;
+                          });
+                        },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: category.color.withValues(alpha: 0.1),
+                                border: Border.all(
+                                  color: _selectedCategory == category ? category.color : category.color.withValues(alpha: 0.1),
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: category.icon,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(category.label, style: TextStyle(color: _selectedCategory == category ? category.color : null)),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
 
               Text(
                 'Product Images',
