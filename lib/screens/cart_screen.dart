@@ -1,0 +1,146 @@
+import 'package:ecommerce/models/product.dart';
+import 'package:ecommerce/provider/providers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class CartScreen extends ConsumerStatefulWidget {
+  const CartScreen({super.key});
+
+  @override
+  ConsumerState<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends ConsumerState<CartScreen> {
+  List<Product> createCartList(List<Product> cart) {
+    final seendIds = <int>{};
+    return cart.where((product) => seendIds.add(product.id)).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme color = Theme.of(context).colorScheme;
+    final cart = ref.watch(checkoutCartProvider);
+    final cartList = createCartList(cart);
+
+    return Scaffold(
+      appBar: AppBar(centerTitle: true, title: const Text('Shopping Cart')),
+      body: cartList.isEmpty
+          ? const Center(child: Text('Your cart is empty'))
+          : Padding(
+              padding: const EdgeInsets.all(12),
+              child: ListView.builder(
+                itemCount: cartList.length,
+                itemBuilder: (context, index) {
+                  final int amount = cart
+                      .where((product) => product.id == cartList[index].id)
+                      .length;
+                  final double price = cartList[index].price * amount;
+                  final String name = cartList[index].name;
+                  final String cat = cartList[index].category.label;
+                  final img = cartList[index].imageURL;
+
+                  return Dismissible(
+                    key: ValueKey<int>(cartList[index].id),
+                    direction: DismissDirection.endToStart,
+                    background: Card(
+                      color: Colors.red,
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [Icon(Icons.delete, color: color.surface)],
+                        ),
+                      ),
+                    ),
+                    onDismissed: (_) {
+                      setState(() {
+                        cart.removeWhere(
+                          (product) => product.id == cartList[index].id,
+                        );
+                      });
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: cartList[index].imageURL.isNotEmpty
+                                  ? Image.network(
+                                      img,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.contain,
+                                      errorBuilder: (ctx, err, stack) =>
+                                          const Center(
+                                            child: Icon(
+                                              Icons.broken_image,
+                                              size: 40,
+                                            ),
+                                          ),
+                                    )
+                                  : Container(color: color.secondary),
+                            ),
+
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(cat),
+                                Text('$price'),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.add, color: Colors.green),
+                                  onPressed: () {
+                                    setState(() {
+                                      cart.add(cartList[index]);
+                                    });
+                                  },
+                                ),
+                                Text('$amount'),
+                                IconButton(
+                                  icon: Icon(Icons.remove, color: Colors.green),
+                                  onPressed: () {
+                                    if (cart
+                                        .where(
+                                          (product) =>
+                                              product.id == cartList[index].id,
+                                        )
+                                        .isNotEmpty) {
+                                      int i = cart.indexWhere(
+                                        (product) =>
+                                            product.id == cartList[index].id,
+                                      );
+
+                                      if (i != -1) {
+                                        setState(() {
+                                          cart.removeAt(i);
+                                        });
+                                      }
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+    );
+  }
+}

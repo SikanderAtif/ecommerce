@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ecommerce/models/category.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -17,10 +18,10 @@ class _AdminNewProductState extends State<AdminNewProduct> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   Category? _selectedCategory;
-  File? _selectedImage;
+  XFile? _selectedImage;
   bool _isUploading = false;
   final ImagePicker _picker = ImagePicker();
-  final String _baseURL = "https://1b7c-110-93-232-234.ngrok-free.app";
+  final String _baseURL = "https://adcf-110-93-232-234.ngrok-free.app";
 
   @override
   void dispose() {
@@ -80,7 +81,7 @@ class _AdminNewProductState extends State<AdminNewProduct> {
 
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = pickedFile;
       });
     }
   }
@@ -105,13 +106,19 @@ class _AdminNewProductState extends State<AdminNewProduct> {
     _showLoadingDialog('Uploading');
     try {
       final String apiURL = "$_baseURL/api/upload";
+      final Map<String, String> header = {
+        'ngrok-skip-browser-warning': 'true', // Bypasses the HTML warning page
+        'Accept': 'application/json',
+      };
 
       debugPrint("Sending request to target: $apiURL");
 
       var request = http.MultipartRequest('POST', Uri.parse(apiURL));
+      request.headers.addAll(header);
 
-      request.files.add(
-        await http.MultipartFile.fromPath('image', _selectedImage!.path),
+        final bytes = await _selectedImage!.readAsBytes();
+        request.files.add(
+          http.MultipartFile.fromBytes('image', bytes, filename: _selectedImage!.name),
       );
 
       request.fields['name'] = name;
@@ -297,7 +304,9 @@ class _AdminNewProductState extends State<AdminNewProduct> {
                               decoration: BoxDecoration(
                                 color: category.color.withValues(alpha: 0.1),
                                 border: Border.all(
-                                  color: _selectedCategory == category ? category.color : category.color.withValues(alpha: 0.1),
+                                  color: _selectedCategory == category
+                                      ? category.color
+                                      : category.color.withValues(alpha: 0.1),
                                 ),
                                 shape: BoxShape.circle,
                               ),
@@ -307,7 +316,14 @@ class _AdminNewProductState extends State<AdminNewProduct> {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            Text(category.label, style: TextStyle(color: _selectedCategory == category ? category.color : null)),
+                            Text(
+                              category.label,
+                              style: TextStyle(
+                                color: _selectedCategory == category
+                                    ? category.color
+                                    : null,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -322,12 +338,18 @@ class _AdminNewProductState extends State<AdminNewProduct> {
               ),
 
               _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      height: 250,
-                      width: 250,
-                      fit: BoxFit.cover,
-                    )
+                  ? kIsWeb
+                        ? Image.network(
+                            _selectedImage!.path,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(_selectedImage!.path),
+                            height: 250,
+                            width: 250,
+                            fit: BoxFit.cover,
+                          )
                   : Icon(Icons.image, size: 100, color: Colors.grey),
               SizedBox(height: 20),
               Row(

@@ -5,6 +5,7 @@ import 'package:ecommerce/screens/admin_all_products.dart';
 import 'package:ecommerce/screens/admin_new_product.dart';
 import 'package:ecommerce/screens/admin_product_details.dart';
 import 'package:ecommerce/screens/admin_screen.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/empty_shell_screen.dart';
 import 'package:ecommerce/screens/home_page_tab.dart';
 import 'package:ecommerce/screens/login_screen.dart';
@@ -76,6 +77,11 @@ final _router = GoRouter(
 
         return AdminProductDetails(item: payload);
       },
+    ),
+    GoRoute(
+      path: '/cart-screen',
+      name: 'cart-screen',
+      builder: (context, state) => const CartScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

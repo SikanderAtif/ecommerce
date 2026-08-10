@@ -64,6 +64,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final cart = ref.watch(checkoutCartProvider);
     final selectedCategory = ref.watch(categoryFilterProvider);
     final ColorScheme color = Theme.of(context).colorScheme;
 
@@ -180,7 +181,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     ? Image.network(
                                         item.imageURL,
                                         width: double.infinity,
-                                        fit: BoxFit.cover,
+                                        height: 350,
+                                        fit: BoxFit.contain,
                                         errorBuilder: (ctx, err, stack) =>
                                             Center(
                                               child: Icon(
@@ -238,6 +240,17 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          await context.pushNamed('cart-screen');
+          setState(() {});
+        },
+        label: Text(
+          '(${cart.length})          PKR ${ref.read(checkoutCartProvider.notifier).getTotal()}',
+          style: TextStyle(color: color.surface),
+        ),
+        icon: Icon(Icons.shopping_cart, color: color.surface),
       ),
     );
   }

@@ -34,7 +34,7 @@ abstract class AppTheme {
         bodyMedium: TextStyle(color: _schemeLight.secondary),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: _schemeLight.surface,
+        backgroundColor: _schemeLight.onSurface,
         foregroundColor: _schemeLight.primary,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

@@ -6,6 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 abstract class APIService {
+  static final Map<String, String> header = {
+    'ngrok-skip-browser-warning': 'true', // Bypasses the HTML warning page
+    'Accept': 'application/json',
+  };
   static String? _apiURL;
 
   static Future<String?> get url async {
@@ -26,7 +30,8 @@ abstract class APIService {
     final apiURL = Uri.parse('$api/api/products');
 
     try {
-      final response = await http.get(apiURL);
+      final response = await http.get(apiURL, headers: header);
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -56,7 +61,7 @@ abstract class APIService {
     final apiURL = Uri.parse('$api/api/products/$productID');
 
     try {
-      final response = await http.delete(apiURL);
+      final response = await http.delete(apiURL, headers: header);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -88,6 +93,7 @@ abstract class APIService {
 
     try {
       var request = http.MultipartRequest('PUT', apiURL);
+      request.headers.addAll(header);
 
       request.fields['name'] = name;
       request.fields['desc'] = desc;
@@ -95,8 +101,9 @@ abstract class APIService {
       request.fields['category'] = category;
 
       if (newImage != null) {
+        final bytes = await newImage.readAsBytes();
         request.files.add(
-          await http.MultipartFile.fromPath('image', newImage.path),
+          http.MultipartFile.fromBytes('image', bytes, filename: newImage.name),
         );
       }
 
@@ -107,7 +114,9 @@ abstract class APIService {
         final Map<String, dynamic> responseData = json.decode(response.body);
         return responseData['status'] == 'success';
       } else {
-        debugPrint('Update rejected by server status code: ${response.statusCode}');
+        debugPrint(
+          'Update rejected by server status code: ${response.statusCode}',
+        );
         return false;
       }
     } catch (e) {

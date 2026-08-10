@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ecommerce/models/category.dart';
 import 'package:ecommerce/models/product.dart';
 import 'package:ecommerce/services/api_service.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -138,25 +139,31 @@ class _AdminProductDetailsState extends State<AdminProductDetails> {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    height: 250,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: _selectedNewImage != null
-                          ? Image.file(
-                              File(_selectedNewImage!.path),
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            )
+                          ? kIsWeb
+                              ? Image.network(
+                                  _selectedNewImage!.path,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  File(_selectedNewImage!.path),
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                )
                           : widget.item.imageURL.isNotEmpty
-                          ? Image.network(
-                              widget.item.imageURL,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (ctx, err, stack) => const Center(
-                                child: Icon(Icons.broken_image, size: 40),
-                              ),
-                            )
-                          : Container(color: color.secondary),
+                              ? Image.network(
+                                  widget.item.imageURL,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (ctx, err, stack) =>
+                                      const Center(
+                                    child: Icon(Icons.broken_image, size: 40),
+                                  ),
+                                )
+                              : Container(color: color.secondary),
                     ),
                   ),
                   const SizedBox(height: 16),
