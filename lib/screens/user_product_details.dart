@@ -23,6 +23,10 @@ class _UserProductDetailsState extends ConsumerState<UserProductDetails> {
     final ColorScheme color = Theme.of(context).colorScheme;
     final TextTheme text = Theme.of(context).textTheme;
     final cart = ref.watch(checkoutCartProvider);
+    final wishlist = ref.watch(wishlistProvider);
+    final bool favorite = wishlist
+        .where((product) => product.id == widget.item.id)
+        .isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(scrolledUnderElevation: 0),
@@ -50,7 +54,25 @@ class _UserProductDetailsState extends ConsumerState<UserProductDetails> {
             ),
             const SizedBox(height: 16),
 
-            Text(widget.item.name, style: text.headlineMedium),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(widget.item.name, style: text.headlineMedium),
+                IconButton(
+                  icon: favorite
+                      ? Icon(Icons.favorite, color: color.onSurface)
+                      : Icon(Icons.favorite_outline, color: color.secondary),
+                  onPressed: () {
+                    if (favorite) {
+                      ref.read(wishlistProvider.notifier).removeProduct(widget.item);
+                    } else {
+                      ref.read(wishlistProvider.notifier).addProduct(widget.item);
+                    }
+                  },
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
 
             Text(
@@ -66,19 +88,7 @@ class _UserProductDetailsState extends ConsumerState<UserProductDetails> {
                 IconButton(
                   icon: Icon(Icons.remove_circle, color: Colors.red),
                   onPressed: () {
-                    if (cart
-                        .where((product) => product.id == widget.item.id)
-                        .isNotEmpty) {
-                      int index = cart.indexWhere(
-                        (product) => product.id == widget.item.id,
-                      );
-
-                      if (index != -1) {
-                        setState(() {
-                          cart.removeAt(index);
-                        });
-                      }
-                    }
+                    ref.read(checkoutCartProvider.notifier).removeProduct(widget.item);
                   },
                 ),
                 Text(
@@ -87,9 +97,7 @@ class _UserProductDetailsState extends ConsumerState<UserProductDetails> {
                 IconButton(
                   icon: Icon(Icons.add_circle, color: Colors.green),
                   onPressed: () {
-                    setState(() {
-                      cart.add(widget.item);
-                    });
+                    ref.read(checkoutCartProvider.notifier).addProduct(widget.item);
                   },
                 ),
               ],
@@ -101,11 +109,12 @@ class _UserProductDetailsState extends ConsumerState<UserProductDetails> {
 
             Text('Description', style: text.headlineMedium),
             Text(widget.item.description, style: text.titleMedium),
-            const SizedBox(height: 24),
+            const SizedBox(height: 64),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'fab_details_screen_${widget.item.id}',
         onPressed: () async {
           await context.pushNamed('cart-screen');
           setState(() {});

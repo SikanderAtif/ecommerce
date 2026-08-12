@@ -14,11 +14,8 @@ class EmptyShellScreen extends ConsumerWidget {
       if (index == 0) {
         ref.read(homeTabKeyProvider.notifier).state++;
       } else if (index == 1) {
-        ref.read(shopTabKeyProvider.notifier).state++;
-      } else if (index == 2) {
         ref.read(wishlistTabKeyProvider.notifier).state++;
-      } 
-      
+      }      
 
       navigationShell.goBranch(
         index,
@@ -36,11 +33,6 @@ class EmptyShellScreen extends ConsumerWidget {
             activeIcon: Icon(Icons.home_outlined),
             icon: Icon(Icons.home_outlined),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.shopping_cart_outlined),
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: 'Shop',
           ),
           BottomNavigationBarItem(
             activeIcon: Icon(Icons.favorite_outline),

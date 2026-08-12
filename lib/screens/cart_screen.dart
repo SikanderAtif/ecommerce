@@ -19,6 +19,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
+    final TextTheme text = Theme.of(context).textTheme;
     final cart = ref.watch(checkoutCartProvider);
     final cartList = createCartList(cart);
 
@@ -53,11 +54,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       ),
                     ),
                     onDismissed: (_) {
-                      setState(() {
-                        cart.removeWhere(
-                          (product) => product.id == cartList[index].id,
-                        );
-                      });
+                      ref.read(checkoutCartProvider.notifier).removeProductAll(cartList[index]);
                     },
                     child: Card(
                       child: Padding(
@@ -88,14 +85,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text('PKR $price', style: TextStyle(color: color.onSurface.withValues(alpha: 0.5))),
                                 Text(
                                   name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: text.titleMedium,
                                 ),
                                 Text(cat),
-                                Text('$price'),
                               ],
                             ),
                             Column(
@@ -103,32 +98,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                 IconButton(
                                   icon: Icon(Icons.add, color: Colors.green),
                                   onPressed: () {
-                                    setState(() {
-                                      cart.add(cartList[index]);
-                                    });
+                                    ref.read(checkoutCartProvider.notifier).addProduct(cartList[index]);
                                   },
                                 ),
                                 Text('$amount'),
                                 IconButton(
                                   icon: Icon(Icons.remove, color: Colors.green),
                                   onPressed: () {
-                                    if (cart
-                                        .where(
-                                          (product) =>
-                                              product.id == cartList[index].id,
-                                        )
-                                        .isNotEmpty) {
-                                      int i = cart.indexWhere(
-                                        (product) =>
-                                            product.id == cartList[index].id,
-                                      );
-
-                                      if (i != -1) {
-                                        setState(() {
-                                          cart.removeAt(i);
-                                        });
-                                      }
-                                    }
+                                    ref.read(checkoutCartProvider.notifier).removeProduct(cartList[index]);
                                   },
                                 ),
                               ],

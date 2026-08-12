@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-void _showLoadingDialog(String message) {
+  void _showLoadingDialog(String message) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -124,174 +124,145 @@ void _showLoadingDialog(String message) {
     final ColorScheme color = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Text(
-              'Create an account',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-            SizedBox(height: 36),
-
-            Container(
-              padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: color.secondary.withValues(alpha: 0.2),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            children: [
+              Text(
+                'Create an account',
+                style: Theme.of(context).textTheme.displayMedium,
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _emailController,
-                      style: TextStyle(color: color.primary),
-                      decoration: InputDecoration(
-                        hint: Text(
-                          'Email',
-                          style: TextStyle(color: color.secondary),
-                        ),
-                        errorText: _errorMessage1,
-                        prefixIcon: Icon(Icons.person),
+              SizedBox(height: 36),
+
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color.secondary.withValues(alpha: 0.2),
+                ),
+                child: TextField(
+                  controller: _emailController,
+                  style: TextStyle(color: color.primary),
+                  decoration: InputDecoration(
+                    hint: Text(
+                      'Email',
+                      style: TextStyle(color: color.secondary),
+                    ),
+                    errorText: _errorMessage1,
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ),
+              SizedBox(height: 12),
+
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color.secondary.withValues(alpha: 0.2),
+                ),
+                child: TextField(
+                  controller: _passController,
+                  style: TextStyle(color: color.primary),
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    hint: Text(
+                      'Password',
+                      style: TextStyle(color: color.secondary),
+                    ),
+                    errorText: _errorMessage2,
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
                       ),
-                      keyboardType: TextInputType.emailAddress,
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
                   ),
-                ],
+                  keyboardType: TextInputType.visiblePassword,
+                ),
               ),
-            ),
-            SizedBox(height: 12),
+              SizedBox(height: 12),
 
-            Container(
-              padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: color.secondary.withValues(alpha: 0.2),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _passController,
-                      style: TextStyle(color: color.primary),
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        hint: Text(
-                          'Password',
-                          style: TextStyle(color: color.secondary),
-                        ),
-                        errorText: _errorMessage2,
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color.secondary.withValues(alpha: 0.2),
+                ),
+                child: TextField(
+                  controller: _confirmPassController,
+                  style: TextStyle(color: color.primary),
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    hint: Text(
+                      'Confirm Password',
+                      style: TextStyle(color: color.secondary),
+                    ),
+                    errorText: _errorMessage3,
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
                       ),
-                      keyboardType: TextInputType.visiblePassword,
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
                   ),
-                ],
+                  keyboardType: TextInputType.visiblePassword,
+                ),
               ),
-            ),
-            SizedBox(height: 12),
+              SizedBox(height: 36),
 
-            Container(
-              padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: color.secondary.withValues(alpha: 0.2),
+              ElevatedButton(
+                onPressed: _signup,
+                child: Text('Create Account', style: TextStyle(fontSize: 24)),
               ),
-              child: Row(
+
+              SizedBox(height: 36),
+              Center(
+                child: Text(
+                  '- OR Continue with -',
+                  style: TextStyle(color: color.secondary),
+                ),
+              ),
+              SizedBox(height: 18),
+              Center(
+                child: AuthProviderButton(
+                  assetPath: 'assets/images/google.png',
+                  isLogin: false,
+                ),
+              ),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _confirmPassController,
-                      style: TextStyle(color: color.primary),
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        hint: Text(
-                          'Confirm Password',
-                          style: TextStyle(color: color.secondary),
-                        ),
-                        errorText: _errorMessage3,
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                    ),
+                  Text(
+                    'I Already Have an Account',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 36),
-
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _signup,
+                  TextButton(
+                    onPressed: () {
+                      context.goNamed('login');
+                    },
                     child: Text(
-                      'Create Account',
-                      style: TextStyle(fontSize: 24),
+                      'Login',
+                      style: TextStyle(decoration: TextDecoration.underline),
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 36),
-            Center(
-              child: Text(
-                '- OR Continue with -',
-                style: TextStyle(color: color.secondary),
+                ],
               ),
-            ),
-            SizedBox(height: 18),
-            Center(
-              child: AuthProviderButton(
-                assetPath: 'assets/images/google.png',
-                isLogin: false,
-              ),
-            ),
-            SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'I Already Have an Account',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                TextButton(
-                  onPressed: () {
-                    context.goNamed('login');
-                  },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

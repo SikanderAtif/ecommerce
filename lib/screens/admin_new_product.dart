@@ -109,6 +109,7 @@ class _AdminNewProductState extends State<AdminNewProduct> {
       final Map<String, String> header = {
         'ngrok-skip-browser-warning': 'true', // Bypasses the HTML warning page
         'Accept': 'application/json',
+        'Connnection': 'close',
       };
 
       debugPrint("Sending request to target: $apiURL");

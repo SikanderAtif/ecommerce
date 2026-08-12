@@ -66,6 +66,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final cart = ref.watch(checkoutCartProvider);
     final selectedCategory = ref.watch(categoryFilterProvider);
+    final wishlist = ref.watch(wishlistProvider);
     final ColorScheme color = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -165,6 +166,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       final item = filter
                           ? finalProducts[index]
                           : products[index];
+                      final bool favorite = wishlist
+                          .where((product) => product.id == item.id)
+                          .isNotEmpty;
 
                       return InkWell(
                         onTap: () {
@@ -198,14 +202,50 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      item.name,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            item.name,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: favorite
+                                              ? Icon(
+                                                  Icons.favorite,
+                                                  color: color.onSurface,
+                                                )
+                                              : Icon(
+                                                  Icons.favorite_outline,
+                                                  color: color.secondary,
+                                                ),
+                                          onPressed: () {
+                                            if (favorite) {
+                                              ref
+                                                  .read(
+                                                    wishlistProvider.notifier,
+                                                  )
+                                                  .removeProduct(item);
+                                            } else {
+                                              ref
+                                                  .read(
+                                                    wishlistProvider.notifier,
+                                                  )
+                                                  .addProduct(item);
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ),
+
                                     SizedBox(height: 4),
                                     Text(
                                       item.description,

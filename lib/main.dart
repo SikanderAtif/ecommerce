@@ -11,12 +11,12 @@ import 'package:ecommerce/screens/home_page_tab.dart';
 import 'package:ecommerce/screens/login_screen.dart';
 import 'package:ecommerce/screens/onboarding_screen.dart';
 import 'package:ecommerce/screens/settings_page_tab.dart';
-import 'package:ecommerce/screens/shop_page_tab.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
 import 'package:ecommerce/screens/user_product_details.dart';
 import 'package:ecommerce/screens/verify_email_screen.dart';
 import 'package:ecommerce/screens/wishlist_page_tab.dart';
+import 'package:ecommerce/services/favorites_helper.dart';
 import 'package:ecommerce/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -117,23 +117,6 @@ final _router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/shop',
-              name: 'shop',
-              builder: (context, state) {
-                return Consumer(
-                  builder: (context, ref, child) {
-                    final keyVersion = ref.watch(shopTabKeyProvider);
-
-                    return ShopPage(key: ValueKey('shop_$keyVersion'));
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
               path: '/wishlist',
               name: 'wishlist',
               builder: (context, state) {
@@ -165,6 +148,7 @@ final _router = GoRouter(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FavoritesHelper.init();
 
   runApp(const ProviderScope(child: MainApp()));
 }

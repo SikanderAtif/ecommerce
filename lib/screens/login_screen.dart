@@ -104,146 +104,125 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Text(
-              'Welcome Back!',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-            SizedBox(height: 12),
-
-            Container(
-              padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: color.secondary.withValues(alpha: 0.2),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Welcome Back!',
+                style: Theme.of(context).textTheme.displayMedium,
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _emailController,
-                      style: TextStyle(color: color.primary),
-                      decoration: InputDecoration(
-                        hint: Text(
-                          'Email',
-                          style: TextStyle(color: color.secondary),
-                        ),
-                        errorText: _errorMessage1,
-                        prefixIcon: Icon(Icons.person),
+              SizedBox(height: 12),
+
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color.secondary.withValues(alpha: 0.2),
+                ),
+                child: TextField(
+                  controller: _emailController,
+                  style: TextStyle(color: color.primary),
+                  decoration: InputDecoration(
+                    hint: Text(
+                      'Email',
+                      style: TextStyle(color: color.secondary),
+                    ),
+                    errorText: _errorMessage1,
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ),
+              SizedBox(height: 12),
+
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: color.secondary.withValues(alpha: 0.2),
+                ),
+                child: TextField(
+                  controller: _passController,
+                  obscureText: _obscureText,
+                  style: TextStyle(color: color.primary),
+                  decoration: InputDecoration(
+                    hint: Text(
+                      'Password',
+                      style: TextStyle(color: color.secondary),
+                    ),
+                    errorText: _errorMessage2,
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
                       ),
-                      keyboardType: TextInputType.emailAddress,
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
+                  ),
+                  keyboardType: TextInputType.visiblePassword,
+                ),
+              ),
+
+              SizedBox(height: 6),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text('Forgot Password?'),
+                ),
+              ),
+
+              SizedBox(height: 36),
+              ElevatedButton(
+                onPressed: _login,
+                child: Text('Login', style: TextStyle(fontSize: 24)),
+              ),
+
+              SizedBox(height: 36),
+              Center(
+                child: Text(
+                  '- OR Continue with -',
+                  style: TextStyle(color: color.secondary),
+                ),
+              ),
+              SizedBox(height: 18),
+              Center(
+                child: AuthProviderButton(
+                  assetPath: 'assets/images/google.png',
+                  isLogin: true,
+                ),
+              ),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Create An Account',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.goNamed('signup');
+                    },
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(decoration: TextDecoration.underline),
                     ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 12),
-
-            Container(
-              padding: EdgeInsets.only(left: 6, right: 6, bottom: 0, top: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: color.secondary.withValues(alpha: 0.2),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _passController,
-                      obscureText: _obscureText,
-                      style: TextStyle(color: color.primary),
-                      decoration: InputDecoration(
-                        hint: Text(
-                          'Password',
-                          style: TextStyle(color: color.secondary),
-                        ),
-                        errorText: _errorMessage2,
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                      ),
-                      keyboardType: TextInputType.visiblePassword,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text('Forgot Password?'),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 36),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _login,
-                    child: Text('Login', style: TextStyle(fontSize: 24)),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 36),
-            Center(
-              child: Text(
-                '- OR Continue with -',
-                style: TextStyle(color: color.secondary),
-              ),
-            ),
-            SizedBox(height: 18),
-            Center(
-              child: AuthProviderButton(
-                assetPath: 'assets/images/google.png',
-                isLogin: true,
-              ),
-            ),
-            SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Create An Account',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                TextButton(
-                  onPressed: () {
-                    context.goNamed('signup');
-                  },
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
