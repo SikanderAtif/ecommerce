@@ -86,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _errorMessage2 = null;
     if (email == 'admin@admin.com' && pass == 'Admin1234') {
       context.goNamed('admin-screen');
+      return;
     }
 
     _showLoadingDialog('Logging in...');

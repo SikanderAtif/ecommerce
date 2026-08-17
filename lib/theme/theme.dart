@@ -81,4 +81,70 @@ abstract class AppTheme {
       ),
     );
   }
+
+    static ThemeData get themeDark {
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: _schemeDark,
+      scaffoldBackgroundColor: _schemeDark.surface,
+      textTheme: TextTheme(
+        displayMedium: TextStyle(
+          color: _schemeDark.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        headlineMedium: TextStyle(
+          color: _schemeDark.primary,
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: TextStyle(color: _schemeDark.primary),
+        bodyMedium: TextStyle(color: _schemeDark.secondary),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: _schemeDark.onSurface,
+        foregroundColor: _schemeDark.primary,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith((_) {
+            return _schemeDark.onSurface;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((_) {
+            return _schemeDark.surface;
+          }),
+          padding: WidgetStateProperty.resolveWith((_) {
+            return EdgeInsets.all(12);
+          }),
+          shape: WidgetStateProperty.resolveWith((_) {
+            return RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            );
+          }),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.resolveWith((_) {
+            return _schemeDark.onSurface;
+          }),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationThemeData(
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        iconColor: _schemeDark.secondary,
+        prefixIconColor: _schemeDark.secondary,
+        suffixIconColor: _schemeDark.secondary,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: _schemeDark.surface,
+        selectedItemColor: _schemeDark.onSurface,
+        unselectedItemColor: _schemeDark.primary,
+        selectedIconTheme: IconThemeData(color: _schemeDark.onSurface),
+        unselectedIconTheme: IconThemeData(color: _schemeDark.primary),
+        selectedLabelStyle: TextStyle(color: _schemeDark.onSurface),
+        unselectedLabelStyle: TextStyle(color: _schemeDark.primary),
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+  }
 }

@@ -54,16 +54,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeInOut,
-        width: _logoSize,
-        height: _logoSize,
-        child: Image.asset('assets/images/logo.png'),
-        onEnd: () {
-          Future.delayed(Duration(seconds: 3), _checkOnboarded);
-        },
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: Center(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeInOut,
+          width: _logoSize,
+          height: _logoSize,
+          child: Image.asset('assets/images/logo.png'),
+          onEnd: () {
+            Future.delayed(Duration(seconds: 3), _checkOnboarded);
+          },
+        ),
       ),
     );
   }

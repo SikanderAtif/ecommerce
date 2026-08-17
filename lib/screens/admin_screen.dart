@@ -15,7 +15,7 @@ class _AdminScreenState extends State<AdminScreen> {
       appBar: AppBar(
         title: Text(
           'Admin Portal',
-          style: Theme.of(context).textTheme.displayMedium,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         centerTitle: true,
         actions: [

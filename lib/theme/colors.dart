@@ -9,5 +9,5 @@ class AppColors {
   static final primaryDark = Colors.white;
   static final secondaryDark = Colors.grey;
   static final surfaceDark = Colors.black;
-  static final onSurfaceDark = const Color.fromARGB(255, 225, 71, 60);
+  static final onSurfaceDark = const Color.fromARGB(255, 88, 29, 226);
 }
