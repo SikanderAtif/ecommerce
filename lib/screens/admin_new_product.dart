@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ecommerce/models/category.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -21,7 +22,7 @@ class _AdminNewProductState extends State<AdminNewProduct> {
   XFile? _selectedImage;
   bool _isUploading = false;
   final ImagePicker _picker = ImagePicker();
-  final String _baseURL = "https://adcf-110-93-232-234.ngrok-free.app";
+  final String _baseURL = dotenv.env["BASE_API_URL"]!;
 
   @override
   void dispose() {

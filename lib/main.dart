@@ -7,9 +7,12 @@ import 'package:ecommerce/screens/admin_product_details.dart';
 import 'package:ecommerce/screens/admin_screen.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/empty_shell_screen.dart';
+import 'package:ecommerce/screens/forgot_password_screen.dart';
 import 'package:ecommerce/screens/home_page_tab.dart';
 import 'package:ecommerce/screens/login_screen.dart';
 import 'package:ecommerce/screens/onboarding_screen.dart';
+import 'package:ecommerce/screens/order_history_screen.dart';
+import 'package:ecommerce/screens/payment_screen.dart';
 import 'package:ecommerce/screens/settings_page_tab.dart';
 import 'package:ecommerce/screens/signup_screen.dart';
 import 'package:ecommerce/screens/splash_screen.dart';
@@ -20,7 +23,9 @@ import 'package:ecommerce/services/favorites_helper.dart';
 import 'package:ecommerce/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -48,6 +53,11 @@ final _router = GoRouter(
       path: '/login',
       name: 'login',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/forgot-password',
+      name: 'forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
     ),
     GoRoute(
       path: '/verify-email',
@@ -83,6 +93,11 @@ final _router = GoRouter(
       name: 'cart-screen',
       builder: (context, state) => const CartScreen(),
     ),
+    GoRoute(
+      path: '/payment-screen',
+      name: 'payment-screen',
+      builder: (context, state) => const PaymentScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return EmptyShellScreen(navigationShell: navigationShell);
@@ -104,7 +119,7 @@ final _router = GoRouter(
               },
             ),
             GoRoute(
-              path: '/home/user-product-details',
+              path: '/user-product-details',
               name: 'user-product-details',
               builder: (context, state) {
                 final payload = state.extra as Product;
@@ -138,6 +153,11 @@ final _router = GoRouter(
               name: 'settings',
               builder: (context, state) => const SettingsPage(),
             ),
+            GoRoute(
+              path: '/order-history-screen',
+              name: 'order-history-screen',
+              builder: (context, state) => const OrderHistoryScreen(),
+            ),
           ],
         ),
       ],
@@ -147,6 +167,10 @@ final _router = GoRouter(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load();
+  Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY']!;
+  await Stripe.instance.applySettings();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FavoritesHelper.init();
 

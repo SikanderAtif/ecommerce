@@ -93,10 +93,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await auth.loginUser(email, pass);
 
     if (user == null) {
-      _errorMessage2 = 'Email or Password is incorrect';
+      setState(() {
+        _errorMessage2 = 'Email or Password is incorrect';
+      });
+      if (mounted && Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
       return;
     }
-    if (mounted) {
+    if (mounted && Navigator.canPop(context)) {
+      Navigator.pop(context);
       context.goNamed('home');
     }
   }
@@ -177,7 +183,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed('forgot-password');
+                  },
                   child: Text('Forgot Password?'),
                 ),
               ),

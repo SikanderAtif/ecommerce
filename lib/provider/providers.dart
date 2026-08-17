@@ -40,6 +40,10 @@ class CheckoutCartNotifier extends Notifier<List<Product>> {
     state = state.where((p) => p.id != item.id).toList();
   }
 
+  void clearCart() {
+    state = [];
+  }
+
   int getProductCount(Product item) {
     return state.where((product) => product.id == item.id).length;
   }
@@ -55,6 +59,18 @@ class CheckoutCartNotifier extends Notifier<List<Product>> {
     }
 
     return total;
+  }
+
+  List<Map<String, dynamic>> getFormattedCartItems() {
+    final Map<int, int> counts = {};
+
+    for (final item in state) {
+      counts[item.id] = (counts[item.id] ?? 0) + 1;
+    }
+
+    return counts.entries.map((entry) {
+      return {'product_id': entry.key, 'quantity': entry.value};
+    }).toList();
   }
 }
 

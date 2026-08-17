@@ -64,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (context.canPop()) {
           context.pop();
         }
-        context.goNamed('signup');
+        context.goNamed('login');
       }
     } catch (e) {
       if (mounted) {
@@ -75,20 +75,69 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  void _openOrderHistoryScreen() {
+    context.pushNamed('order-history-screen');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ColorScheme color = Theme.of(context).colorScheme;
+
     return Scaffold(
-      body: Center(
-        child: Expanded(
-          child: ElevatedButton(
-            onPressed: _signout,
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.resolveWith((_) {
-                return Colors.red;
-              }),
+      backgroundColor: color.secondary.withValues(alpha: 0.1),
+      appBar: AppBar(),
+      body: Padding(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _openOrderHistoryScreen,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.resolveWith((_) {
+                        return color.surface;
+                      }),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.history, color: color.secondary),
+                        SizedBox(width: 12),
+                        Text(
+                          'Order History',
+                          style: TextStyle(color: color.primary),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            child: Text('Sign Out'),
-          ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _signout,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.resolveWith((_) {
+                        return Colors.red;
+                      }),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout),
+                        SizedBox(width: 12),
+                        Text('Sign Out'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

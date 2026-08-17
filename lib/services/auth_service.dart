@@ -12,8 +12,28 @@ class AuthService {
   }
 
   Future<void> checkEmailVerified() async {
-    // Reload the user data from Firebase servers
     await currentUser()?.reload();
+  }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      String message = e.message ?? 'An unknown error occurred.';
+
+      if (e.code == 'user-not-found') {
+        message = 'No user found with this email address.';
+      } else if (e.code == 'invalid-email') {
+        message = 'The email address format is invalid.';
+      }
+
+      debugPrint(message);
+      throw message;
+    } catch (e) {
+      String message = 'Failed to send reset link. Please try again.';
+      debugPrint(message);
+      throw message;
+    }
   }
 
   Future<void> sendVerificationEmail() async {
@@ -108,7 +128,7 @@ class AuthService {
         email: user.email!,
         password: password,
       );
-      
+
       await user.reauthenticateWithCredential(credential);
       await user.delete();
     } catch (e) {
