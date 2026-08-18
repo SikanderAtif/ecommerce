@@ -1,6 +1,7 @@
 import 'package:ecommerce/services/auth_service.dart';
 import 'package:ecommerce/widgets/auth_provider_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -84,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     _errorMessage2 = null;
-    if (email == 'admin@admin.com' && pass == 'Admin1234') {
+    if (email == dotenv.env['ADMIN_EMAIL'] && pass == dotenv.env['ADMIN_PASS']) {
       context.goNamed('admin-screen');
       return;
     }
